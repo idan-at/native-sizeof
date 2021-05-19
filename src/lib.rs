@@ -1,4 +1,7 @@
+use std::collections::HashSet;
 use neon::prelude::*;
+use neon::handle::Managed;
+use neon::macro_internal::runtime::raw;
 
 enum Sizes {
     Character = 2,
@@ -6,7 +9,7 @@ enum Sizes {
     Number = 8,
 }
 
-fn sizeof_value(cx: &mut FunctionContext, handle: Handle<JsValue>) -> u32 {
+fn sizeof_value(cx: &mut FunctionContext, handle: Handle<JsValue>, seen: &mut HashSet<raw::Local>) -> u32 {
     if handle.is_a::<JsBoolean, _>(cx) {
         Sizes::Boolean as u32
     } else if handle.is_a::<JsNumber, _>(cx) {
@@ -20,17 +23,25 @@ fn sizeof_value(cx: &mut FunctionContext, handle: Handle<JsValue>) -> u32 {
     } else if handle.is_a::<JsArray, _>(cx) {
         let vec = handle.downcast_or_throw::<JsArray, _>(cx).unwrap().to_vec(cx).unwrap();
 
-        vec.into_iter().fold(0, |acc, value| acc + sizeof_value(cx, value))
+        vec.into_iter().fold(0, |acc, value| acc + sizeof_value(cx, value, seen))
     } else if handle.is_a::<JsObject, _>(cx) {
+        // seen.insert(handle.to_raw());
+
         let object = handle.downcast_or_throw::<JsObject, _>(cx).unwrap();
 
-        let keys = object.get_own_property_names(cx).unwrap().to_vec(cx).unwrap();
+        let keys_handles = object.get_own_property_names(cx).unwrap().to_vec(cx).unwrap();
 
-        keys.into_iter().fold(0, |acc, key| {
-            let value = object.get(cx, key).unwrap();
+        keys_handles.into_iter().fold(0, |acc, key_handle| {
+            let value_handle = object.get(cx, key_handle).unwrap();
 
-            let key_size = sizeof_value(cx, key);
-            let value_size = sizeof_value(cx, value);
+            // println!("{}", seen.len());
+
+            // if seen.contains(&value_handle.to_raw()) {
+            //     return acc;
+            // }
+
+            let key_size = sizeof_value(cx, key_handle, seen);
+            let value_size = sizeof_value(cx, value_handle, seen);
 
             acc + key_size + value_size
         })
@@ -43,7 +54,8 @@ fn sizeof_value(cx: &mut FunctionContext, handle: Handle<JsValue>) -> u32 {
 fn sizeof(mut cx: FunctionContext) -> JsResult<JsNumber> {
     let argument = cx.argument_opt(0).unwrap_or(cx.undefined().as_value(&mut cx));
 
-    let size = sizeof_value(&mut cx, argument);
+    let mut seen: HashSet<raw::Local> = HashSet::new();
+    let size = sizeof_value(&mut cx, argument, &mut seen);
 
     Ok(cx.number(size))
 }

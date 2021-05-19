@@ -11,11 +11,11 @@ describe("native-sizeof", () => {
     // - NaN
     // - Inf
     // - Symbols
-    // - Functions
       test.each`
       value | expected | description
       ${undefined} | ${0} | ${"undefined"}
       ${null} | ${0} | ${"null"}
+      ${function () {}} | ${0} | ${"a function"}
       ${{}} | ${0} | ${"an empty object"}
       ${chance.bool()} | ${4} | ${"a boolean"}
       ${chance.integer()} | ${8} | ${"an integer number"}
@@ -38,7 +38,6 @@ describe("native-sizeof", () => {
     })
   })
 
-  // TODO: test cyclic object
   describe("objects", () => {
     test.each`
     object | expected | description
@@ -48,8 +47,28 @@ describe("native-sizeof", () => {
     `("returns $expected for $description", ({object, expected}) => {
       expect(sizeof(object)).toStrictEqual(expected);
     })
+
+    test.skip("ignores already seen objects in case of a cycle", () => {
+      const object = {abc: 123};
+      object.cycle = object;
+
+      expect(sizeof(object)).toStrictEqual(3 * 2 + 8 + 5 * 2);
+    })
+
+    test("larger objects", () => {
+      const object = {};
+      const count = 100;
+
+      for (let i = 0; i < count; i++) {
+        const key = chance.string({ length: 10 })
+
+        object[key] = chance.bool();
+      }
+
+      const keysSize = count * 10 * 2;
+      const valuesSize = count * 4;
+
+      expect(sizeof(object)).toStrictEqual(keysSize + valuesSize);
+    })
   })
-
-  describe("large items", () => { })
-
 })
