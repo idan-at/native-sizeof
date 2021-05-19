@@ -1,0 +1,16 @@
+[package]
+name = "native-sizeof"
+version = "0.1.0"
+description = "A native package to quickly calculate an object size"
+authors = ["Idan Attias"]
+license = "ISC"
+edition = "2018"
+exclude = ["index.node"]
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies.neon]
+version = "0.8"
+default-features = false
+features = ["napi-6"]
