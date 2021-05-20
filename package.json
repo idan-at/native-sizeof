@@ -2,7 +2,7 @@
   "name": "native-sizeof",
   "version": "0.1.0",
   "description": "A native package to quickly calculate an object size",
-  "main": "index.node",
+  "main": "./native/index.node",
   "files": [
     "src"
   ],
@@ -16,16 +16,35 @@
     "memory"
   ],
   "scripts": {
-    "build": "cargo-cp-artifact -nc index.node -- cargo build --message-format=json-render-diagnostics",
-    "install": "npm run build",
+    "clean": "rm -rf node_modules target src/target native",
+    "build": "cargo-cp-artifact -nc native/index.node -- cargo build --message-format=json-render-diagnostics",
+    "install": "node-pre-gyp install --fallback-to-build=false || npm run build",
     "pretest": "npm run build",
-    "test": "cargo test && jest"
+    "test": "cargo test && jest",
+    "package": "node-pre-gyp package",
+    "upload-binary": "node-pre-gyp package && node-pre-gyp-github publish"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/idan-at/native-sizeof.git"
+  },
+  "binary": {
+    "module_name": "index",
+    "host": "https://github.com/idan-at/native-sizeof/releases/download/",
+    "remote_path": "{version}",
+    "package_name": "{node_abi}-{platform}-{arch}.tar.gz",
+    "module_path": ".",
+    "pkg_path": "."
   },
   "author": "Idan Attias",
   "license": "ISC",
   "devDependencies": {
     "cargo-cp-artifact": "^0.1",
     "chance": "^1.1.7",
-    "jest": "^26.6.3"
+    "jest": "^26.6.3",
+    "node-pre-gyp-github": "^1.4.3"
+  },
+  "dependencies": {
+    "node-pre-gyp": "^0.17.0"
   }
 }
