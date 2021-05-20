@@ -1,5 +1,8 @@
 # native-sizeof
 
+[![npm version](https://badge.fury.io/js/native-sizeof.svg)](https://badge.fury.io/js/native-sizeof)
+[![Actions Status: build](https://github.com/idan-at/native-sizeof/workflows/test/badge.svg)](https://github.com/idan-at/native-sizeof/actions?query=workflow%3A"test")
+
 A native package to quickly calculate an object size, written in Rust.
 
 ## Installation
