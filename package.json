@@ -1,8 +1,11 @@
 {
   "name": "native-sizeof",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "A native package to quickly calculate an object size",
   "main": "./native/index.node",
+  "files": [
+    "./native/index.node"
+  ],
   "keywords": [
     "sizeof",
     "object-size",
