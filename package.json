@@ -33,7 +33,7 @@
     "host": "https://github.com/idan-at/native-sizeof/releases/download/",
     "remote_path": "{version}",
     "package_name": "{node_abi}-{platform}-{arch}.tar.gz",
-    "module_path": ".",
+    "module_path": "./native",
     "pkg_path": "."
   },
   "author": "Idan Attias",
