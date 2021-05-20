@@ -43,8 +43,8 @@ NOTE: Some JS engines might optimize those numbers, but those are a good upper b
 ## Development
 
 ### Prerequisites
-- Node
-- Rust
+- Node (at least 12)
+- Rust (stable)
 
 ### Building
 - `npm install`
