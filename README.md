@@ -31,11 +31,11 @@ Since iterating over an object and summing up the occupied memory is a synchrono
 
 ## Object size calculation
 According to the [ECMAScript® Language Specification](https://tc39.es/ecma262/):
-- Each `boolean` value is represented using 2 bytes.
-- Each `number` value is represented using 8 bytes.
-- Each `string` value is represented using 2 bytes per character. (so a string of length 3 takes 2 * 3 = 6 bytes).
+- Each `boolean` value is represented using **2 bytes**.
+- Each `number` value is represented using **8 bytes**.
+- Each `string` value is represented using **2 bytes per character**. (so a string of length 3 takes 2 * 3 = 6 bytes).
 
-NOTE: Some engines might optimize those numbers, but those are a good upper bound.
+NOTE: Some JS engines might optimize those numbers, but those are a good upper bound.
 
 ## Development
 
