@@ -8,6 +8,7 @@ edition = "2018"
 exclude = ["index.node"]
 
 [lib]
+name = "index"
 crate-type = ["cdylib"]
 
 [dependencies.neon]
