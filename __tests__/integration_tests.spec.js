@@ -8,8 +8,6 @@ describe("native-sizeof", () => {
     });
 
     // TODO:
-    // - NaN
-    // - Inf
     // - Symbols
     test.each`
       value                           | expected | description
@@ -19,6 +17,8 @@ describe("native-sizeof", () => {
       ${{}}                           | ${0}     | ${"an empty object"}
       ${chance.bool()}                | ${4}     | ${"a boolean"}
       ${chance.integer()}             | ${8}     | ${"an integer number"}
+      ${NaN}                          | ${8}     | ${"NaN"}
+      ${Infinity}                     | ${8}     | ${"Infinity"}
       ${chance.floating()}            | ${8}     | ${"an float number"}
       ${chance.string({ length: 5 })} | ${5 * 2} | ${"a string of size 5"}
       ${Buffer.alloc(5)}              | ${5}     | ${"a buffer of size 5"}
