@@ -16,18 +16,14 @@ fn sizeof_value<'a>(
     } else if handle.is_a::<JsNumber, _>(cx) {
         Sizes::Number as u32
     } else if handle.is_a::<JsString, _>(cx) {
-        handle
-            .downcast_or_throw::<JsString, _>(cx)
-            .unwrap()
-            .size(cx) as u32
-            * Sizes::Character as u32
+        handle.downcast::<JsString, _>(cx).unwrap().size(cx) as u32 * Sizes::Character as u32
     } else if handle.is_a::<JsBuffer, _>(cx) {
-        let buffer = handle.downcast_or_throw::<JsBuffer, _>(cx).unwrap();
+        let buffer = handle.downcast::<JsBuffer, _>(cx).unwrap();
 
         cx.borrow(&buffer, |buf| buf.as_slice::<u8>().len()) as u32
     } else if handle.is_a::<JsArray, _>(cx) {
         let vec = handle
-            .downcast_or_throw::<JsArray, _>(cx)
+            .downcast::<JsArray, _>(cx)
             .unwrap()
             .to_vec(cx)
             .unwrap();
@@ -37,7 +33,7 @@ fn sizeof_value<'a>(
     } else if handle.is_a::<JsObject, _>(cx) {
         seen.push(handle.clone());
 
-        let object = handle.downcast_or_throw::<JsObject, _>(cx).unwrap();
+        let object = handle.downcast::<JsObject, _>(cx).unwrap();
 
         let keys_handles = object
             .get_own_property_names(cx)
