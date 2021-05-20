@@ -23,7 +23,7 @@ jobs:
     - run: npm run build
     - run: npm test
     - name: Publish
-      if: "contains(github.event.head_commit.message, '[publish binary]')"
+      if: "contains(github.event.head_commit.message, '[Release]')"
       run: |
         COMMIT_MESSAGE=$(git log --format=%B --no-merges -n 1 | tr -d '\n') \
         npm run upload-binary
