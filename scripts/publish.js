@@ -21,7 +21,7 @@ async function publish() {
   let release = releases.find(release => release.tag_name === version);
 
   if (!release) {
-    ({ data: release }) = await octokit.repos.createRelease({
+    const { data } = await octokit.repos.createRelease({
       owner,
       repo,
       tag_name: version,
@@ -29,6 +29,8 @@ async function publish() {
       body: `${name} ${version}`,
       prerelease: false
     });
+
+    release = data
   }
 
   const assetsPath = path.resolve(__dirname, "..", "build", "stage", version);
