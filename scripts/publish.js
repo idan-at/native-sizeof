@@ -26,7 +26,7 @@ async function publish() {
 
   const assets = await fs.readdir(assetsPath)
 
-  await Promise.all(assets.map(asset => {
+  await Promise.all(assets.map(async (asset) => {
     const data = await fs.readFile(path.join(assetsPath, asset))
 
     return octokit.repos.uploadReleaseAsset({
