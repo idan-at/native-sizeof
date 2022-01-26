@@ -13,21 +13,30 @@ async function publish() {
     auth: token,
   });
 
-  const { data: release } = await octokit.repos.createRelease({
+  const { data: releases } = await octokit.repos.listReleases({
     owner,
     repo,
-    tag_name: version,
-    name: `v${version}`,
-    body: `${name} ${version}`,
-    prerelease: false
   });
+
+  let release = releases.find(release => release.tag_name === version);
+
+  if (!release) {
+    ({ data: release }) = await octokit.repos.createRelease({
+      owner,
+      repo,
+      tag_name: version,
+      name: `v${version}`,
+      body: `${name} ${version}`,
+      prerelease: false
+    });
+  }
 
   const assetsPath = path.resolve(__dirname, "..", "build", "stage", version);
 
-  const assets = await fs.readdir(assetsPath)
+  const assets = await fs.readdir(assetsPath);
 
   await Promise.all(assets.map(async (asset) => {
-    const data = await fs.readFile(path.join(assetsPath, asset))
+    const data = await fs.readFile(path.join(assetsPath, asset));
 
     return octokit.repos.uploadReleaseAsset({
       owner,
@@ -35,8 +44,8 @@ async function publish() {
       release_id: release.id,
       name: asset,
       data,
-    })
-  }))
+    });
+  }));
 };
 
 if (require.main === module) {
