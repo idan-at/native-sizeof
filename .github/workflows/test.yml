@@ -30,6 +30,5 @@ jobs:
     - name: Publish
       if: "contains(github.event.head_commit.message, 'Release')"
       env:
-        NODE_PRE_GYP_GITHUB_TOKEN: ${{ secrets.NODE_PRE_GYP_GITHUB_TOKEN }}
-        COMMIT_MESSAGE: Release new version
+        GITHUB_TOKEN: ${{ secrets.NODE_PRE_GYP_GITHUB_TOKEN }}
       run: npm run upload-binary
