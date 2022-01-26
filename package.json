@@ -22,7 +22,7 @@
     "pretest": "npm run build",
     "test": "jest",
     "package": "node-pre-gyp package",
-    "upload-binary": "node-pre-gyp package && node-pre-gyp-github publish"
+    "upload-binary": "node-pre-gyp package && node-pre-gyp-github publish --release"
   },
   "repository": {
     "type": "git",
